@@ -165,15 +165,18 @@ class WidgetWrapper extends pw.ImageProvider {
 
     final repaintBoundary = RenderRepaintBoundary();
     final view = View.of(context);
+    final size =
+        Size(computedConstraints.maxWidth, computedConstraints.maxHeight);
 
     final renderView = RenderView(
       child: RenderPositionedBox(
           alignment: Alignment.center, child: repaintBoundary),
-      configuration: ViewConfiguration(
-          size:
-              Size(computedConstraints.maxWidth, computedConstraints.maxHeight),
-          devicePixelRatio: view.devicePixelRatio),
       view: view,
+      configuration: ViewConfiguration(
+        physicalConstraints: BoxConstraints.tight(size) * view.devicePixelRatio,
+        logicalConstraints: BoxConstraints.tight(size),
+        devicePixelRatio: view.devicePixelRatio,
+      ),
     );
 
     final pipelineOwner = PipelineOwner()..rootNode = renderView;
